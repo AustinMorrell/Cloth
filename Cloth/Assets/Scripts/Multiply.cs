@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class Multiply : MonoBehaviour {
 
@@ -9,29 +9,44 @@ public class Multiply : MonoBehaviour {
     private Point poin;
     [SerializeField]
     private Damper damp;
-    private Point[] points = new Point[16];
-    private Damper[] dampers = new Damper[36];
+    private List<Point> points = new List<Point>();
+    private List<Damper> dampers = new List<Damper>();
 
     void Start() {
-        int c = 0;
+        SpawnPoints();
+        SpawnDamps();
+        SpawnTri();
+	}
+
+    void SpawnPoints()
+    {
         for (int i = 0; i < 4; i++)
         {
             for (int b = 0; b < 4; b++)
             {
-                poin.r = new Vector3(i * 3, b * 3, 0);
-                points[c] = poin;
-                c++;
-                if (c > 16)
-                {
-                    c = 16;
-                }
-                Debug.Log(c);
+                Vector3 position = new Vector3(i * 3, b * 3, 0);
+                Point a = (Point)Instantiate(poin, poin.transform.position, poin.transform.rotation);
+                a.r = position;
+                points.Add(a);
             }
         }
+    }
 
-        foreach(Point d in points)
+    void SpawnDamps()
+    {
+        for (int p = 0; p < a_SpringDamper; p++)
         {
-            Instantiate(d, d.transform.position, d.transform.rotation);
+            Damper v = (Damper)Instantiate(damp, damp.transform.position, damp.transform.rotation);
+            v.P1 = points[p];
+            v.P2 = points[p + 1];
+            Vector3 position = Vector3.Lerp(v.P1.r, v.P2.r, 0.5f);
+            v.transform.position = position;
+            dampers.Add(v);
         }
-	}
+    }
+
+    void SpawnTri()
+    {
+
+    }
 }
