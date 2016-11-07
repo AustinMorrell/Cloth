@@ -9,6 +9,7 @@ public class Point : MonoBehaviour {
     public float m = 0.0f; //mass
     public Vector3 p = Vector3.zero; // momentum
     public Vector3 f = Vector3.zero; //force
+    public bool ap = true;
 
     void Start()
     {
@@ -18,8 +19,8 @@ public class Point : MonoBehaviour {
     void Update()
     {
         a = f * (1 / m);
-        v = v + (a * Time.deltaTime);
-        r = r + (v * Time.deltaTime);
+        v += a * Time.fixedDeltaTime;
+        r += v * Time.fixedDeltaTime;
         transform.position = r;
     }
 }

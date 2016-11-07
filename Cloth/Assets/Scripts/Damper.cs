@@ -34,7 +34,7 @@ public class Damper : MonoBehaviour {
     private void BacktoThreeD()
     {
         float fsd = (-Ks * (L0 - L)) - (kd * (V1 - V2));
-        P1.r = fsd * dir;
-        P2.r = -(P1.r);
+        P1.f = fsd * dir;
+        P2.f = -(P1.f);
     }
 }
