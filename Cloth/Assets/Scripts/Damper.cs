@@ -3,18 +3,18 @@ using System.Collections;
 
 public class Damper : MonoBehaviour {
 
-    public float Ks = 3; // Spring constant
-    public float kd = 2; // Damping factor
-    public float L0 = 0; // Rest length
+    public float Ks = 10; // Spring constant
+    public float kd = 100; // Damping factor
+    public float L0 = 4; // Rest length
     public float L = 3; // Length
     public Point P1, P2;
     private float V1, V2;
     private Vector3 f1, f2;
     Vector3 dir;
 
-    void Start()
+    void Update()
     {
-
+        ComputeForce();
     }
 
     public void ComputeForce()
