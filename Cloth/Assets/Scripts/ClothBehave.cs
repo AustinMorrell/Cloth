@@ -90,16 +90,18 @@ public class ClothBehave : MonoBehaviour {
             if (p.ap)
             {
                 ApplyGravity(p);
-                ApplyForces(p);
-                ApplyAerodynamics(p);
+                //ApplyForces(p);
+                //ApplyAerodynamics(p);
             }
         }
 	}
 
     void ApplyGravity(Point p)
     {
-        Vector3 g = new Vector3(0, -0.00981f, 0) * (p.m / Mathf.Pow(Time.deltaTime, 2));
-        p.f += p.m * g;
+        Vector3 gravityDirection = new Vector3(0,-1, 0);
+        float gravityStrength = 9.8f;
+        Vector3 gravityVector = gravityDirection * gravityStrength;
+        p.f = gravityVector;
     }
 
     void ApplyForces(Point p)
