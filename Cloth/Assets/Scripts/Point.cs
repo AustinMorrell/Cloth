@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Point : MonoBehaviour {
 
-    public Vector3 r = Vector3.zero; //position
     public Vector3 v = Vector3.zero; //velocity
     public Vector3 a = Vector3.zero; //acceleration
     public float m = 10.0f; //mass
