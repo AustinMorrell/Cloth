@@ -12,7 +12,13 @@ public class ClothBehave : MonoBehaviour
     [SerializeField]
     private GameObject Damp;
     [SerializeField]
+    private GameObject Trian;
+    [SerializeField]
     private float gravityStrength = 9.8f;
+    [SerializeField]
+    private Vector3 air;
+    [SerializeField]
+    private float speed;
     public List<Point> points;
     public List<Damper> dampers;
     public List<Triangle> tris = new List<Triangle>();
@@ -21,6 +27,7 @@ public class ClothBehave : MonoBehaviour
     {
         MakePoints(rowLength);
         MakeDampers();
+        MakeTriagnles();
     }
 
     void MakePoints(int a)
@@ -31,7 +38,7 @@ public class ClothBehave : MonoBehaviour
         {
             for (int j = 0; j < a; j++)
             {
-                GameObject temp = Instantiate(prefab, new Vector3(x, y, 0), new Quaternion()) as GameObject;
+                GameObject temp = Instantiate(prefab, new Vector3(0, y, x), new Quaternion()) as GameObject;
                 Point mp = temp.GetComponent<Point>();
                 mp.transform.position = new Vector3(x, y, 0);
                 mp.v = new Vector3(0, 0, 0);
@@ -54,6 +61,7 @@ public class ClothBehave : MonoBehaviour
                 Damper dp = temp.GetComponent<Damper>();
                 dp.P1 = points[i];
                 dp.P2 = points[i + 1];
+                dp.speed = speed;
                 dp.name = i.ToString();
                 dampers.Add(dp);
             }
@@ -64,6 +72,7 @@ public class ClothBehave : MonoBehaviour
                 Damper dp = temp.GetComponent<Damper>();
                 dp.P1 = points[i];
                 dp.P2 = points[i + rowLength];
+                dp.speed = speed;
                 dp.name = i.ToString();
                 dampers.Add(dp);
             }
@@ -74,6 +83,7 @@ public class ClothBehave : MonoBehaviour
                 Damper dp = temp.GetComponent<Damper>();
                 dp.P1 = points[i];
                 dp.P2 = points[i + (rowLength + 1)];
+                dp.speed = speed;
                 dp.name = i.ToString();
                 dampers.Add(dp);
             }
@@ -84,6 +94,7 @@ public class ClothBehave : MonoBehaviour
                 Damper dp = temp.GetComponent<Damper>();
                 dp.P1 = points[i];
                 dp.P2 = points[i + (rowLength - 1)];
+                dp.speed = speed;
                 dp.name = i.ToString();
                 dampers.Add(dp);
             }
@@ -97,7 +108,48 @@ public class ClothBehave : MonoBehaviour
 
     void MakeTriagnles()
     {
+        for (int i = 0; i < points.Count; i++)
+        {
+            if (i % rowLength != 0 && i > (rowLength - 1))
+            {
+                GameObject temp = Instantiate(Trian, new Vector3(0, 0, 0), new Quaternion()) as GameObject;
+                Triangle dp = temp.GetComponent<Triangle>();
+                dp.TP1 = points[i];
+                dp.TP2 = points[i - rowLength];
+                dp.TP3 = points[i - 1];
+                tris.Add(dp);
+            }
 
+            if ((i + 1) % rowLength != 0 && i < ((rowLength * rowLength) - rowLength))
+            {
+                GameObject temp = Instantiate(Trian, new Vector3(0, 0, 0), new Quaternion()) as GameObject;
+                Triangle dp = temp.GetComponent<Triangle>();
+                dp.TP1 = points[i];
+                dp.TP2 = points[i + rowLength];
+                dp.TP3 = points[i + 1];
+                tris.Add(dp);
+            }
+
+            if ((i + 1) % rowLength != 0 && i < ((rowLength * rowLength) - rowLength))
+            {
+                GameObject temp = Instantiate(Trian, new Vector3(0, 0, 0), new Quaternion()) as GameObject;
+                Triangle dp = temp.GetComponent<Triangle>();
+                dp.TP1 = points[i];
+                dp.TP2 = points[i + rowLength + 1];
+                dp.TP3 = points[i + 1];
+                tris.Add(dp);
+            }
+
+            if ((i + 1) % rowLength != 0 && i < ((rowLength * rowLength) - rowLength))
+            {
+                GameObject temp = Instantiate(Trian, new Vector3(0, 0, 0), new Quaternion()) as GameObject;
+                Triangle dp = temp.GetComponent<Triangle>();
+                dp.TP1 = points[i];
+                dp.TP2 = points[i + rowLength];
+                dp.TP3 = points[i + rowLength + 1];
+                tris.Add(dp);
+            }
+        }
     }
 
     // Update is called once per frame
@@ -108,10 +160,10 @@ public class ClothBehave : MonoBehaviour
             if (p.ap)
             {
                 ApplyGravity(p);
-                //ApplyForces(p);
-                //ApplyAerodynamics(p);
             }
         }
+        ApplyForces();
+        ApplyAerodynamics();
     }
 
     void ApplyGravity(Point p)
@@ -121,13 +173,20 @@ public class ClothBehave : MonoBehaviour
         p.f = gravityVector;
     }
 
-    void ApplyForces(Point p)
+    void ApplyForces()
     {
-        
+        foreach (Damper d in dampers)
+        {
+            d.ComputeForce();
+            Debug.DrawLine(d.P1.transform.position, d.P2.transform.position);
+        }
     }
 
-    void ApplyAerodynamics(Point p)
+    void ApplyAerodynamics()
     {
- 
+        foreach (Triangle t in tris)
+        {
+            t.ComputeAerodynamicForce(air);
+        }
     }
 }
