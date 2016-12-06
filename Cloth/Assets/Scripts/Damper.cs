@@ -1,21 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Damper : MonoBehaviour {
+public class Damper {
 
     public float Ks = 10; // Spring constant
-    public float kd = 100; // Damping factor
-    public float L0; // Rest length
+    public float kd = 10; // Damping factor
+    public float L0 = 4; // Rest length
     public float L; // Length
     public Point P1, P2;
     private float V1, V2;
-    private Vector3 f1, f2;
-    public float speed;
+    public float speed = 1;
     Vector3 dir;
 
-    void Start()
+    public void Start()
     {
-        L0 = Vector3.Distance(P1.transform.position, P2.transform.position);
+        L0 = Vector3.Distance(P1.r, P2.r);
     }
 
     public void ComputeForce()
@@ -26,7 +25,7 @@ public class Damper : MonoBehaviour {
 
     private void ThreeDtoOneD()
     {
-        Vector3 dist = P2.transform.position - P1.transform.position;
+        Vector3 dist = P2.r - P1.r;
         L = dist.magnitude;
         dir = dist / L;
         V1 = Vector3.Dot(P1.v, dir);
