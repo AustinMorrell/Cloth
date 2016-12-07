@@ -194,6 +194,18 @@ public class ClothBehave : MonoBehaviour
             d.Ks = SpringConstant;
             d.kd = DampingFactor;
             d.ComputeForce();
+            if (d.L > 50)
+            {
+                dampers.Remove(d);
+                foreach (Monodamper md in FindObjectsOfType<Monodamper>())
+                {
+                    if (md.d == d)
+                    {
+                        md.GetComponent<LineRenderer>().SetWidth(0, 0);
+                        Destroy(md.gameObject);
+                    }
+                }
+            }
         }
 
         foreach (Monodamper md in FindObjectsOfType<Monodamper>())
@@ -206,7 +218,6 @@ public class ClothBehave : MonoBehaviour
     {
         foreach (Triangle t in tris)
         {
-
             t.ComputeAerodynamicForce(air * windStr);
         }
     }

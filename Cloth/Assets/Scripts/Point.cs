@@ -22,5 +22,9 @@ public class Point {
         v += a * Time.fixedDeltaTime;
         v = Vector3.ClampMagnitude(v, 5.0f);
         r += v * Time.fixedDeltaTime;
+        if (r.y < 0)
+        {
+            r.y = 0;
+        }
     }
 }
