@@ -9,6 +9,7 @@ public class Point {
     public Vector3 p = Vector3.zero; // momentum
     public Vector3 f = Vector3.zero; // force
     public Vector3 r = Vector3.zero; // position
+    public bool CLicked;
     public bool ap = true;
 
     public void Start()

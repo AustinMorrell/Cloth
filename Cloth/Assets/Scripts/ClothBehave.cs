@@ -202,6 +202,14 @@ public class ClothBehave : MonoBehaviour
                     if (md.d == d)
                     {
                         md.GetComponent<LineRenderer>().SetWidth(0, 0);
+                        if (md.d.P1.CLicked)
+                        {
+                            points.Remove(md.d.P1);
+                        }
+                        if (md.d.P2.CLicked)
+                        {
+                            points.Remove(md.d.P2);
+                        }
                         Destroy(md.gameObject);
                     }
                 }
@@ -218,6 +226,17 @@ public class ClothBehave : MonoBehaviour
     {
         foreach (Triangle t in tris)
         {
+            if (t.TP1 == null || t.TP2 == null || t.TP3 == null)
+            {
+                foreach (Monotriangle md in FindObjectsOfType<Monotriangle>())
+                {
+                    if (md.t == t)
+                    {
+                        tris.Remove(t);
+                        Destroy(md.gameObject);
+                    }
+                }
+            }
             t.ComputeAerodynamicForce(air * windStr);
         }
     }
