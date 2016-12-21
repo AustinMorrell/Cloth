@@ -109,7 +109,7 @@ public class ClothBehave : MonoBehaviour
                 dampers.Add(dp);
             }
 
-            if (i == 0 || i == (rowLength - 1) || i == ((rowLength * rowLength) - 1) || i == ((rowLength * rowLength) - rowLength))
+            if (/*i == 0 || i == (rowLength - 1) || */i == ((rowLength * rowLength) - 1) || i == ((rowLength * rowLength) - rowLength))
             {
                 points[i].ap = false;
             }
