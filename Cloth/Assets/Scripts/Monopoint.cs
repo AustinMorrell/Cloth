@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 
+// A particle in Unity.
+// Can also be moved in the scene by the user.
 public class Monopoint : MonoBehaviour, IDragHandler, IPointerClickHandler, IPointerUpHandler {
 
     public Point p;
