@@ -6,24 +6,25 @@ public class ClothBehave : MonoBehaviour
     [Range(0.0f, 1.0f)]
     public float mass;
     [SerializeField]
-    private int rowLength = 5;
+    private int rowLength = 5; // The amount of points in each row.
     [SerializeField]
-    private GameObject prefab;
+    private GameObject prefab; // Point
     [SerializeField]
-    private GameObject Damp;
+    private GameObject Damp; // Spring Damper
     [SerializeField]
-    private GameObject Trian;
-    public float gravityStrength = 9.8f;
-    public float windStr;
+    private GameObject Trian; // Triangle
+    public float gravityStrength = 9.8f; // The strength of gravity
+    public float windStr; // The winds strength
     public float SpringConstant;
     public float DampingFactor;
-    private Vector3 air;
+    private Vector3 air; // The wind vector
     [SerializeField]
     private float speed;
-    public List<Point> points;
-    public List<Damper> dampers;
-    public List<Triangle> tris;
+    public List<Point> points; // A list of points
+    public List<Damper> dampers; // A list of Spring Dampers
+    public List<Triangle> tris; // A list of triangles
 
+    // Set my inital values.
     void Start()
     {
         air = new Vector3(0, 1, 1);
@@ -35,6 +36,7 @@ public class ClothBehave : MonoBehaviour
         MakeTriagnles();
     }
 
+    // Make the particles in my cloth
     void MakePoints(int a)
     {
         float x = 0f;
@@ -57,6 +59,7 @@ public class ClothBehave : MonoBehaviour
         }
     }
 
+    // Make the spring dampers in my cloth connecting the particles.
     void MakeDampers()
     {
         for (int i = 0; i < points.Count; i++)
@@ -116,6 +119,7 @@ public class ClothBehave : MonoBehaviour
         }
     }
 
+    // Make the triangles in the cloth for aero dynamics.
     void MakeTriagnles()
     {
         for (int i = 0; i < points.Count; i++)
@@ -169,6 +173,7 @@ public class ClothBehave : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Update all the points.
         foreach (Point p in points)
         {
             if (p.ap)
@@ -180,6 +185,7 @@ public class ClothBehave : MonoBehaviour
         ApplyAerodynamics();
     }
 
+    // Makes gravity by applying a force in the negative y direction.
     void ApplyGravity(Point p)
     {
         Vector3 gravityDirection = new Vector3(0, -1, 0);
@@ -191,9 +197,11 @@ public class ClothBehave : MonoBehaviour
     {
         foreach (Damper d in dampers)
         {
+            // Update the dampers spring constant and damping factor.
             d.Ks = SpringConstant;
             d.kd = DampingFactor;
             d.ComputeForce();
+            // Apply tearing if needed.
             if (d.L > 50)
             {
                 dampers.Remove(d);
@@ -216,6 +224,7 @@ public class ClothBehave : MonoBehaviour
             }
         }
 
+        // Draw a line to represent each damper.
         foreach (Monodamper md in FindObjectsOfType<Monodamper>())
         {
             md.GetComponent<LineRenderer>().SetPositions(new Vector3[] { md.d.P1.r, md.d.P2.r });
@@ -226,6 +235,7 @@ public class ClothBehave : MonoBehaviour
     {
         foreach (Triangle t in tris)
         {
+            // If any points in a triangle are gone deleat the triangle.
             if (t.TP1 == null || t.TP2 == null || t.TP3 == null)
             {
                 foreach (Monotriangle md in FindObjectsOfType<Monotriangle>())
@@ -237,10 +247,12 @@ public class ClothBehave : MonoBehaviour
                     }
                 }
             }
+            // Update the aero dynamic force made by the triangle.
             t.ComputeAerodynamicForce(air * windStr);
         }
     }
 
+    // Slider functions:
     public void SetGrav(float a)
     {
         gravityStrength = a;

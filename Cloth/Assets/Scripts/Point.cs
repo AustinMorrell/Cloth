@@ -19,9 +19,11 @@ public class Point {
 
     public void Update()
     {
+        // The calculation for velocity from force.
         a = f * (1 / m) ;
         v += a * Time.fixedDeltaTime;
         v = Vector3.ClampMagnitude(v, 5.0f);
+        // The calculation for the change in position from velocity.
         r += v * Time.fixedDeltaTime;
         if (r.y < 0)
         {
